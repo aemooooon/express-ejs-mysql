@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>学生列表</title>
+</head>
+<header>
+    <div class="container text-center mt-5">
+        <h2>学生列表</h2>
+    </div>
+</header>
+
+<section>
+    <div class="container mt-5">
+        <a href="/add" class="btn btn-outline-primary text-right">Add New Student</a>
+    </div>
+</section>
+
+<section>
+    <div class="container py-5">
+        <div class="input-group mb-3">
+            <input class="form-control" type="text" id="username" name="username" value="<%=searchname%>" />
+            <button class="btn btn-outline-secondary" onclick="search()">Search</button>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Gender</th>
+                    <th>Birthday</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+                <% for(let i=0;i<res.length;i++){ %>
+                    <tr>
+                        <td>
+                            <%=res[i].username%>
+                        </td>
+                        <td>
+                            <%=res[i].first_name + res[i].last_name%>
+                        </td>
+                        <td>
+                            <%=res[i].gender%>
+                        </td>
+                        <td>
+                            <%=moment(res[i].dob).format("YYYY-MM-DD")%>
+                        </td>
+                        <td>
+                            <%=res[i].email%>
+                        </td>
+                        <td>
+                            <a class="btn btn-info" href="/student?id=<%=res[i].id%>">Edit</a>
+                            <a class="btn btn-danger" href="javascript:del(<%=res[i].id%>)">Delete</a>
+                        </td>
+                    </tr>
+                    <% } %>
+
+            </table>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script src="/js/jquery.min.js"></script>
+<script>
+    function search() {
+        location.href = './students?username=' + $("#username").val();
+    }
+
+    function del(id) {
+        $.ajax({
+            url: '/student/delete?id=' + id,
+            success: function (res) {
+                if (res.status === 1) {
+                    alert('success');
+                    window.location.reload();
+                }
+            }
+        })
+    }
+</script>
+</body>
+
+</html>
